@@ -12,12 +12,16 @@ static DCB dcb;
 static char lpBuffor_read[33], lpBuffor_write[33];
 static DWORD RS_ile;
 
-HANDLE * CreateHandler(char COM){
+HANDLE * CreateHandler(char* COM){
+	printf("1\n");
 	HANDLE *hNumPort = CreateFile(COM, GENERIC_WRITE | GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	printf("2\n");
 	dcb.DCBlength = sizeof(dcb);
-
+	printf("3\n");
 	dcb.BaudRate = CBR_9600;
+	printf("4\n");
 	dcb.fParity = FALSE;
+	printf("5\n");
 	//dcb.Parity = NOPARITY;
 	dcb.StopBits = ONESTOPBIT;
 	dcb.ByteSize = 8;
@@ -37,16 +41,22 @@ HANDLE * CreateHandler(char COM){
 }
 
 int main(){
-	HANDLE *hNumPort = CreateHandler("COM3");
+	char* COM = "COM3";
+	printf("dupa\n");
+	HANDLE *hNumPort = CreateHandler(COM);
+	printf("dupa2\n");
 	
-	
-	SetCommState(*hNumPort, &dcb);
+	SetCommState(hNumPort, &dcb);
+	printf("2\n");
 	strcpy(lpBuffor_write, "CLS 30\r\nLINE 100 100 600 400 0\r\n");// Niech to bêdzie przyk³adowe polecenie dla urz¹dzenia
-	WriteFile(*hNumPort, lpBuffor_write, strlen(lpBuffor_write), &RS_ile, 0);
+	printf("3\n");
+	WriteFile(hNumPort, lpBuffor_write, strlen(lpBuffor_write), &RS_ile, 0);
+	printf("4\n");
 	
-	ReadFile(*hNumPort, lpBuffor_read, 15, &RS_ile, 0);
+	ReadFile(hNumPort, lpBuffor_read, 15, &RS_ile, 0);
+	printf("5\n");
 	
-	CloseHandle(*hNumPort);
+	CloseHandle(hNumPort);
 
 	//system("Pause");
 	getchar();
